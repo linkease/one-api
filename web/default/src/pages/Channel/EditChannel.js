@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Button, Card, Form, Input, Message} from 'semantic-ui-react';
-import {useNavigate, useParams} from 'react-router-dom';
-import {API, copy, getChannelModels, showError, showInfo, showSuccess, verifyJSON,} from '../../helpers';
-import {CHANNEL_OPTIONS} from '../../constants';
-import {renderChannelTip} from '../../helpers/render';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button, Card, Form, Input, Message } from 'semantic-ui-react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { API, copy, getChannelModels, showError, showInfo, showSuccess, verifyJSON, } from '../../helpers';
+import { CHANNEL_OPTIONS } from '../../constants';
+import { renderChannelTip } from '../../helpers/render';
 
 const MODEL_MAPPING_EXAMPLE = {
   'gpt-3.5-turbo-0301': 'gpt-3.5-turbo',
@@ -68,6 +68,7 @@ const EditChannel = () => {
   const handleInputChange = (e, { name, value }) => {
     setInputs((inputs) => ({ ...inputs, [name]: value }));
     if (name === 'type') {
+
       let localModels = getChannelModels(value);
       if (inputs.models.length === 0) {
         setInputs((inputs) => ({ ...inputs, models: localModels }));
@@ -339,20 +340,20 @@ const EditChannel = () => {
             {inputs.type === 8 && (
               <Form.Field>
                 <Form.Input
-                    required
-                    label={t('channel.edit.proxy_url')}
-                    name='base_url'
-                    placeholder={t('channel.edit.proxy_url_placeholder')}
-                    onChange={handleInputChange}
-                    value={inputs.base_url}
-                    autoComplete='new-password'
+                  required
+                  label={t('channel.edit.proxy_url')}
+                  name='base_url'
+                  placeholder={t('channel.edit.proxy_url_placeholder')}
+                  onChange={handleInputChange}
+                  value={inputs.base_url}
+                  autoComplete='new-password'
                 />
               </Form.Field>
             )}
             {inputs.type === 50 && (
-                <Form.Field>
-                  <Form.Input
-                      required
+              <Form.Field>
+                <Form.Input
+                  required
                   label={t('channel.edit.base_url')}
                   name='base_url'
                   placeholder={t('channel.edit.base_url_placeholder')}
@@ -651,13 +652,13 @@ const EditChannel = () => {
             {inputs.type !== 3 &&
               inputs.type !== 33 &&
               inputs.type !== 8 &&
-                inputs.type !== 50 &&
+              inputs.type !== 50 &&
               inputs.type !== 22 && (
                 <Form.Field>
                   <Form.Input
-                      label={t('channel.edit.proxy_url')}
+                    label={t('channel.edit.proxy_url')}
                     name='base_url'
-                      placeholder={t('channel.edit.proxy_url_placeholder')}
+                    placeholder={t('channel.edit.proxy_url_placeholder')}
                     onChange={handleInputChange}
                     value={inputs.base_url}
                     autoComplete='new-password'

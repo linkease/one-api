@@ -2,6 +2,9 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/songquanpeng/one-api/common/ctxkey"
 	"github.com/songquanpeng/one-api/model"
@@ -11,8 +14,6 @@ import (
 	"github.com/songquanpeng/one-api/relay/channeltype"
 	"github.com/songquanpeng/one-api/relay/meta"
 	relaymodel "github.com/songquanpeng/one-api/relay/model"
-	"net/http"
-	"strings"
 )
 
 // https://platform.openai.com/docs/api-reference/models/list
@@ -62,6 +63,7 @@ func init() {
 		Group:              nil,
 		IsBlocking:         false,
 	})
+	fmt.Println("ojbk")
 	// https://platform.openai.com/docs/models/model-endpoint-compatibility
 	for i := 0; i < apitype.Dummy; i++ {
 		if i == apitype.AIProxyLibrary {

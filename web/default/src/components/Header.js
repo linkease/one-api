@@ -157,11 +157,11 @@ const Header = () => {
           style={
             showSidebar
               ? {
-                  borderBottom: 'none',
-                  marginBottom: '0',
-                  borderTop: 'none',
-                  height: '51px',
-                }
+                borderBottom: 'none',
+                marginBottom: '0',
+                borderTop: 'none',
+                height: '51px',
+              }
               : { borderTop: 'none', height: '52px' }
           }
         >

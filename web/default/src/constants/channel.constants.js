@@ -105,4 +105,5 @@ export const CHANNEL_OPTIONS = [
   { key: 9, text: '代理：AI.LS', value: 9, color: 'yellow' },
   { key: 12, text: '代理：API2GPT', value: 12, color: 'blue' },
   { key: 13, text: '代理：AIGC2D', value: 13, color: 'purple' },
+  { key: 52, text: 'Lightrag', value: 52, color: 'purple' },
 ];
