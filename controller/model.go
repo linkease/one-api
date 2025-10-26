@@ -63,7 +63,6 @@ func init() {
 		Group:              nil,
 		IsBlocking:         false,
 	})
-	fmt.Println("ojbk")
 	// https://platform.openai.com/docs/models/model-endpoint-compatibility
 	for i := 0; i < apitype.Dummy; i++ {
 		if i == apitype.AIProxyLibrary {

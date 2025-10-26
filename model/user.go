@@ -41,6 +41,7 @@ type User struct {
 	Email            string `json:"email" gorm:"index" validate:"max=50"`
 	GitHubId         string `json:"github_id" gorm:"column:github_id;index"`
 	WeChatId         string `json:"wechat_id" gorm:"column:wechat_id;index"`
+	KcId             string `json:"kc_id" gorm:"column:kc_id;index"`
 	LarkId           string `json:"lark_id" gorm:"column:lark_id;index"`
 	OidcId           string `json:"oidc_id" gorm:"column:oidc_id;index"`
 	VerificationCode string `json:"verification_code" gorm:"-:all"`                                    // this field is only for Email verification, don't save it to database!
@@ -264,6 +265,13 @@ func (user *User) FillUserByWeChatId() error {
 	DB.Where(User{WeChatId: user.WeChatId}).First(user)
 	return nil
 }
+func (user *User) FillUserByKcId() error {
+	if user.KcId == "" {
+		return errors.New("kc id 为空！")
+	}
+	DB.Where(User{KcId: user.KcId}).First(user)
+	return nil
+}
 
 func (user *User) FillUserByUsername() error {
 	if user.Username == "" {
@@ -295,6 +303,10 @@ func IsOidcIdAlreadyTaken(oidcId string) bool {
 
 func IsUsernameAlreadyTaken(username string) bool {
 	return DB.Where("username = ?", username).Find(&User{}).RowsAffected == 1
+}
+
+func IsKoolcenterIdAlreadyTaken(kcId string) bool {
+	return DB.Where("kc_id = ?", kcId).Find(&User{}).RowsAffected == 1
 }
 
 func ResetUserPasswordByEmail(email string, password string) error {
