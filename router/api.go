@@ -10,7 +10,7 @@ import (
 )
 
 func SetApiRouter(router *gin.Engine) {
-	apiRouter := router.Group("/api")
+	apiRouter := router.Group("/kc-admin/api")
 	apiRouter.Use(gzip.Gzip(gzip.DefaultCompression))
 	apiRouter.Use(middleware.GlobalAPIRateLimit())
 	{
