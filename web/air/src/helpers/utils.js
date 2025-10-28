@@ -1,7 +1,7 @@
 import { Toast } from '@douyinfe/semi-ui';
 import { toastConstants } from '../constants';
 import React from 'react';
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 const HTMLToastContent = ({ htmlContent }) => {
   return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
@@ -29,7 +29,7 @@ export function getSystemName() {
 
 export function getLogo() {
   let logo = localStorage.getItem('logo');
-  if (!logo) return '/logo.png';
+  if (!logo) return '/kc-admin/logo.png';
   return logo
 }
 
@@ -194,10 +194,10 @@ export function timestamp2string1(timestamp, dataExportDefaultTime = 'hour') {
     let nextMonth = (nextWeek.getMonth() + 1).toString();
     let nextDay = nextWeek.getDate().toString();
     if (nextMonth.length === 1) {
-        nextMonth = '0' + nextMonth;
+      nextMonth = '0' + nextMonth;
     }
     if (nextDay.length === 1) {
-        nextDay = '0' + nextDay;
+      nextDay = '0' + nextDay;
     }
     str += ' - ' + nextMonth + '-' + nextDay
   }

@@ -1,7 +1,7 @@
-import {toast} from 'react-toastify';
-import {toastConstants} from '../constants';
+import { toast } from 'react-toastify';
+import { toastConstants } from '../constants';
 import React from 'react';
-import {API} from './api';
+import { API } from './api';
 
 const HTMLToastContent = ({ htmlContent }) => {
   return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
@@ -30,7 +30,7 @@ export function getSystemName() {
 
 export function getLogo() {
   let logo = localStorage.getItem('logo');
-  if (!logo) return '/logo.png';
+  if (!logo) return '/kc-admin/logo.png';
   return logo;
 }
 
@@ -81,7 +81,7 @@ export function showError(error) {
       switch (error.response.status) {
         case 401:
           // toast.error('错误：未登录或登录已过期，请重新登录！', showErrorOptions);
-          window.location.href = '/login?expired=true';
+          window.location.href = '/kc-admin/login?expired=true';
           break;
         case 429:
           toast.error('错误：请求次数过多，请稍后再试！', showErrorOptions);
@@ -159,7 +159,7 @@ export function timestamp2string(timestamp) {
     second = '0' + second;
   }
   return (
-      year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+    year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
   );
 }
 
