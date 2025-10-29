@@ -16,6 +16,7 @@ import (
 	"github.com/songquanpeng/one-api/common/config"
 	"github.com/songquanpeng/one-api/common/i18n"
 	"github.com/songquanpeng/one-api/common/logger"
+	"github.com/songquanpeng/one-api/configs"
 	"github.com/songquanpeng/one-api/controller"
 	"github.com/songquanpeng/one-api/middleware"
 	"github.com/songquanpeng/one-api/model"
@@ -41,7 +42,9 @@ func main() {
 	// Initialize SQL Database
 	model.InitDB()
 	model.InitLogDB()
-
+	if err := configs.OpenKcaiConfig("./"); err != nil {
+		panic(err)
+	}
 	var err error
 	err = model.CreateRootAccountIfNeed()
 	if err != nil {

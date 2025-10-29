@@ -1,0 +1,6 @@
+oauth2:
+  clientId: "aitest"
+  clientSecret: "aitest123456"
+  domain: "https://sso.koolcenter.com"
+callbackUrl: http://localhost:3000
+nextchat: "http://localhost:3001/#/"

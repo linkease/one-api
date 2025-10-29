@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/songquanpeng/one-api/common/ctxkey"
+	"github.com/songquanpeng/one-api/configs"
 	"github.com/songquanpeng/one-api/controller/oauth2"
 )
 
@@ -22,6 +23,6 @@ func GetKcaiNextchat(ctx *gin.Context) {
 		})
 		return
 	}
-	nextchatUrl := `http://192.168.100.1:9381//#/?settings={"key":"` + token + `","url":"http://localhost:3000"}`
+	nextchatUrl := configs.KcaiConfig.GetNextchatUrl() + `?token=` + token
 	ctx.Redirect(302, nextchatUrl)
 }

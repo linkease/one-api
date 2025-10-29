@@ -11,7 +11,7 @@ import (
 // http://localhost:9096/oauth/authorize
 func HandleOauth2Router(router *gin.Engine) {
 	router.GET("/api/kcai/token", middleware.UserAuth(), kcai.GetKcaiToken)
-	router.GET("/api/kcai/nextchat", kcai.GetKcaiNextchat)
+	router.GET("/api/kcai/nextchat", middleware.UserAuth(), kcai.GetKcaiNextchat)
 	router.GET("/auth/oauth2_basic", oauth2.GetAuthOauth2Basic)
 	router.GET("/auth/oauth2_basic/callback", oauth2.GetAuthOauth2BasicCallback)
 }

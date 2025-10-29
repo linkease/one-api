@@ -6,16 +6,17 @@ var (
 	client_id     = "aitest"
 	client_secret = "aitest123456"
 	oauth2_url    = url.URL{
-		Scheme: "https",
-		Host:   "sso.koolcenter.com",
+		// Scheme: "https",
+		// Host:   "sso.koolcenter.com",
 	}
 	callback_url = url.URL{
-		Scheme: "http",
-		Host:   "localhost:3000",
-		Path:   "/auth/oauth2_basic/callback",
+		// Scheme: "http",
+		// Host:   "localhost:3000",
+		Path: "/auth/oauth2_basic/callback",
 	}
 )
 
+// https://app.nextchat.dev/#/?settings={"key":"sk-53jdHvnij2GlLcqq8246112918C34b73AfE25819B05349F7","url":"http://localhost:3000"}
 // http://localhost:3000/auth/oauth2_basic
 // http://localhost:9096/oauth/authorize
 

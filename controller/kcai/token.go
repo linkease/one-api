@@ -45,6 +45,7 @@ func GetKcaiToken(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, oauth2.ResponseJSON{
+		Success: true,
 		Data: ResponseKcai{
 			Token: token,
 			Model: strings.Join(lightrag.ModelList, ","),
