@@ -22,6 +22,8 @@ func SetWebRouter(router *gin.Engine, buildFS embed.FS) {
 	router.Use(middleware.Cache())
 	// router.Use(static.Serve("/web", common.EmbedFolder(buildFS, fmt.Sprintf("web/build/%s", config.Theme))))
 	// router.Static("/kc-admin", fmt.Sprintf("web/build/%s", config.Theme))
+
+	// Use embedded file system instead of physical file system
 	router.Use(static.Serve("/kc-admin", common.EmbedFolder(buildFS, fmt.Sprintf("web/build/%s", config.Theme))))
 
 	router.NoRoute(func(c *gin.Context) {
