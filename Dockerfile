@@ -9,10 +9,32 @@ RUN npm install --prefix /web/default & \
     npm install --prefix /web/air & \
     wait
 
-RUN DISABLE_ESLINT_PLUGIN='true' REACT_APP_VERSION=$(cat ./VERSION) npm run build --prefix /web/default & \
-    DISABLE_ESLINT_PLUGIN='true' REACT_APP_VERSION=$(cat ./VERSION) npm run build --prefix /web/berry & \
-    DISABLE_ESLINT_PLUGIN='true' REACT_APP_VERSION=$(cat ./VERSION) npm run build --prefix /web/air & \
-    wait
+RUN DISABLE_ESLINT_PLUGIN='true' REACT_APP_VERSION=$(cat ./VERSION) npm run build --prefix /web/default && \
+    DISABLE_ESLINT_PLUGIN='true' REACT_APP_VERSION=$(cat ./VERSION) npm run build --prefix /web/berry && \
+    DISABLE_ESLINT_PLUGIN='true' REACT_APP_VERSION=$(cat ./VERSION) npm run build --prefix /web/air
+
+# Debug: verify front-end build artifacts are where we expect them
+RUN echo "=== Verify web/build artifacts ===" && \
+        echo "PWD: $(pwd)" && \
+        echo "--- /web ---" && ls -la /web || true && \
+        echo "--- /web/build ---" && ls -la /web/build || true && \
+        for T in default berry air; do \
+            echo "--- Theme: $T ---"; \
+            if [ -d "/web/build/$T" ]; then \
+                ls -la "/web/build/$T"; \
+                if [ -f "/web/build/$T/index.html" ]; then \
+                    echo "OK: /web/build/$T/index.html exists"; \
+                    # Print first few referenced assets for quick sanity check (non-fatal)
+                    head -n 60 "/web/build/$T/index.html" | grep -Eo 'src="/kc-admin/[^" ]+\.js"|href="/kc-admin/[^" ]+\.css"' | head -n 5 || true; \
+                else \
+                    echo "MISSING: /web/build/$T/index.html"; \
+                fi; \
+            else \
+                echo "MISSING DIR: /web/build/$T"; \
+            fi; \
+        done && \
+        echo "--- index.html discovered under /web/build (maxdepth=2) ---" && \
+        find /web/build -maxdepth 2 -type f -name 'index.html' -print || true
 
 FROM golang:alpine AS builder2
 
