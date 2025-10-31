@@ -26,11 +26,12 @@ import (
 const (
 	ModeGlobal = "global"
 	ModeBypass = "bypass"
+	ModeMix    = "mix"
 )
 
 func ConvertRequest(request model.GeneralOpenAIRequest) *ChatRequest {
 	lightragRequest := ChatRequest{
-		Mode:              ModeBypass,
+		Mode:              ModeMix,
 		ResponseType:      "Multiple Paragraphs",
 		TopK:              40,
 		ChunkTopK:         20,
