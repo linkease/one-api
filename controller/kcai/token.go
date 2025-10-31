@@ -8,14 +8,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/songquanpeng/one-api/common/config"
 	"github.com/songquanpeng/one-api/common/ctxkey"
+	"github.com/songquanpeng/one-api/configs"
 	"github.com/songquanpeng/one-api/controller/oauth2"
 	"github.com/songquanpeng/one-api/model"
 	"github.com/songquanpeng/one-api/relay/adaptor/lightrag"
 )
 
 type ResponseKcai struct {
-	Token string `json:"token"`
-	Model string `json:"model"`
+	Token    string `json:"token"`
+	Model    string `json:"model"`
+	Nextchat string `json:"nextchat"`
 }
 
 func getUserToken(userid int) (string, error) {
@@ -44,11 +46,13 @@ func GetKcaiToken(ctx *gin.Context) {
 		})
 		return
 	}
+	nextchat := configs.KcaiConfig.GetNextchatUrl() + `?token=` + token
 	ctx.JSON(http.StatusOK, oauth2.ResponseJSON{
 		Success: true,
 		Data: ResponseKcai{
-			Token: token,
-			Model: strings.Join(lightrag.ModelList, ","),
+			Token:    token,
+			Model:    strings.Join(lightrag.ModelList, ","),
+			Nextchat: nextchat,
 		},
 	})
 }
