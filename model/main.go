@@ -2,7 +2,11 @@ package model
 
 import (
 	"database/sql"
-	"fmt"
+	"errors"
+	"os"
+	"strings"
+	"time"
+
 	"github.com/songquanpeng/one-api/common"
 	"github.com/songquanpeng/one-api/common/config"
 	"github.com/songquanpeng/one-api/common/env"
@@ -11,11 +15,7 @@ import (
 	"github.com/songquanpeng/one-api/common/random"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"os"
-	"strings"
-	"time"
 )
 
 var DB *gorm.DB
@@ -100,13 +100,18 @@ func openMySQL(dsn string) (*gorm.DB, error) {
 }
 
 func openSQLite() (*gorm.DB, error) {
+	return nil, errors.New("SQLite is not supported")
+}
+
+// "gorm.io/driver/sqlite"
+/* func openSQLite() (*gorm.DB, error) {
 	logger.SysLog("SQL_DSN not set, using SQLite as database")
 	common.UsingSQLite = true
 	dsn := fmt.Sprintf("%s?_busy_timeout=%d", common.SQLitePath, common.SQLiteBusyTimeout)
 	return gorm.Open(sqlite.Open(dsn), &gorm.Config{
 		PrepareStmt: true, // precompile SQL
 	})
-}
+} */
 
 func InitDB() {
 	var err error

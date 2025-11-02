@@ -66,6 +66,11 @@ func getPreConsumedQuota(textRequest *relaymodel.GeneralOpenAIRequest, promptTok
 }
 
 func preConsumeQuota(ctx context.Context, textRequest *relaymodel.GeneralOpenAIRequest, promptTokens int, ratio float64, meta *meta.Meta) (int64, *relaymodel.ErrorWithStatusCode) {
+	// If SkipConsume is set (e.g. rag/v1 entrypoint with models that shouldn't be billed), skip pre-consume
+	if meta != nil && meta.SkipConsume {
+		logger.Infof(ctx, "skip pre-consume quota: user=%d model=%s path=%s", meta.UserId, textRequest.Model, meta.RequestURLPath)
+		return 0, nil
+	}
 	preConsumedQuota := getPreConsumedQuota(textRequest, promptTokens, ratio)
 
 	userQuota, err := model.CacheGetUserQuota(ctx, meta.UserId)
@@ -95,6 +100,12 @@ func preConsumeQuota(ctx context.Context, textRequest *relaymodel.GeneralOpenAIR
 }
 
 func postConsumeQuota(ctx context.Context, usage *relaymodel.Usage, meta *meta.Meta, textRequest *relaymodel.GeneralOpenAIRequest, ratio float64, preConsumedQuota int64, modelRatio float64, groupRatio float64, systemPromptReset bool) {
+	// if SkipConsume is set, skip all post-consume billing/logging
+	if meta != nil && meta.SkipConsume {
+		logger.Infof(ctx, "skip post-consume quota: user=%d model=%s path=%s", meta.UserId, textRequest.Model, meta.RequestURLPath)
+		return
+	}
+
 	if usage == nil {
 		logger.Error(ctx, "usage is nil, which is unexpected")
 		return

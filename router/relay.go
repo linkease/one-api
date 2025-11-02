@@ -1,23 +1,36 @@
 package router
 
 import (
+	"strings"
+
 	"github.com/songquanpeng/one-api/controller"
 	"github.com/songquanpeng/one-api/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
-func SetRelayRouter(router *gin.Engine) {
+// SetRelayRouter registers OpenAI-compatible relay routes under the given subPath.
+// If subPath is empty the routes are registered under `/v1`.
+// If subPath is e.g. "rag" the routes are registered under `/rag/v1`.
+func SetRelayRouter(router *gin.Engine, subPath string) {
 	router.Use(middleware.CORS())
 	router.Use(middleware.GzipDecodeMiddleware())
-	// https://platform.openai.com/docs/api-reference/introduction
-	modelsRouter := router.Group("/v1/models")
+
+	// normalize prefix: "" -> "", "rag" -> "/rag"
+	prefix := ""
+	if strings.TrimSpace(subPath) != "" {
+		prefix = "/" + strings.Trim(subPath, "/")
+	}
+
+	// models
+	modelsRouter := router.Group(prefix + "/v1/models")
 	modelsRouter.Use(middleware.TokenAuth())
 	{
 		modelsRouter.GET("", controller.ListModels)
 		modelsRouter.GET("/:model", controller.RetrieveModel)
 	}
-	relayV1Router := router.Group("/v1")
+
+	relayV1Router := router.Group(prefix + "/v1")
 	relayV1Router.Use(middleware.RelayPanicRecover(), middleware.TokenAuth(), middleware.Distribute())
 	{
 		relayV1Router.Any("/oneapi/proxy/:channelid/*target", controller.Relay)

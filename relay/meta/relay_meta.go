@@ -35,6 +35,8 @@ type Meta struct {
 	PromptTokens       int // only for DoResponse
 	ForcedSystemPrompt string
 	StartTime          time.Time
+	// SkipConsume indicates whether token consumption (pre/post billing) should be skipped
+	SkipConsume bool
 }
 
 func GetByContext(c *gin.Context) *Meta {

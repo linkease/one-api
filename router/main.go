@@ -15,7 +15,10 @@ import (
 func SetRouter(router *gin.Engine, buildFS embed.FS) {
 	SetApiRouter(router)
 	SetDashboardRouter(router)
-	SetRelayRouter(router)
+	// register relay routes for default OpenAI-compatible endpoints (/v1)
+	SetRelayRouter(router, "")
+	// register relay routes for RAG (knowledge-base) entrypoint (/rag/v1)
+	SetRelayRouter(router, "rag")
 	HandleOauth2Router(router)
 	frontendBaseUrl := os.Getenv("FRONTEND_BASE_URL")
 	if config.IsMasterNode && frontendBaseUrl != "" {

@@ -96,6 +96,7 @@ func main() {
 	}
 	openai.InitTokenEncoders()
 	client.Init()
+	fmt.Println("All clients initialized")
 
 	// Initialize i18n
 	if err := i18n.Init(); err != nil {
@@ -119,6 +120,7 @@ func main() {
 	if port == "" {
 		port = strconv.Itoa(*common.Port)
 	}
+	fmt.Printf("server started on http://localhost:%s\n", port)
 	logger.SysLogf("server started on http://localhost:%s", port)
 	err = server.Run(":" + port)
 	if err != nil {
