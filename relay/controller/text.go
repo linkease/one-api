@@ -37,7 +37,7 @@ func RelayTextHelper(c *gin.Context) *model.ErrorWithStatusCode {
 	// special case: when this is the RAG entrypoint and using the lightrag_qwen model,
 	// do NOT perform token accounting (pre/post consume).
 	// Set a flag in meta so helper.preConsumeQuota and helper.postConsumeQuota can skip billing.
-	if strings.HasPrefix(c.Request.URL.Path, "/rag/v1") && textRequest.Model == "lightrag_qwen" {
+	if strings.HasPrefix(c.Request.URL.Path, "/rag/v1") && textRequest.Model == "lightrag-qwen" {
 		meta.SkipConsume = true
 		logger.Infof(ctx, "skip token accounting enabled: path=%s user=%d model=%s", c.Request.URL.Path, meta.UserId, textRequest.Model)
 	}
