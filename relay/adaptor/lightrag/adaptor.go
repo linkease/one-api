@@ -34,7 +34,7 @@ func (a *Adaptor) GetRequestURL(meta *meta.Meta) (string, error) {
 
 func (a *Adaptor) SetupRequestHeader(c *gin.Context, req *http.Request, meta *meta.Meta) error {
 	adaptor.SetupCommonRequestHeader(c, req, meta)
-	req.Header.Set("X-API-Key", a.apiKey)
+	req.Header.Set("X-Openai-Key", a.apiKey)
 	return nil
 }
 
