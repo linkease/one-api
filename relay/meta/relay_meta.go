@@ -35,8 +35,9 @@ type Meta struct {
 	PromptTokens       int // only for DoResponse
 	ForcedSystemPrompt string
 	StartTime          time.Time
-	// SkipConsume indicates whether token consumption (pre/post billing) should be skipped
-	SkipConsume bool
+	// UseRequestAuth indicates whether to use the original request Authorization when
+	// forwarding to upstream (and therefore skip internal token consumption).
+	UseRequestAuth bool
 }
 
 func GetByContext(c *gin.Context) *Meta {
@@ -64,5 +65,11 @@ func GetByContext(c *gin.Context) *Meta {
 		meta.BaseURL = channeltype.ChannelBaseURLs[meta.ChannelType]
 	}
 	meta.APIType = channeltype.ToAPIType(meta.ChannelType)
+	// read UseRequestAuth flag from context (set by middleware/distributor when applicable)
+	if v, ok := c.Get(ctxkey.UseRequestAuth); ok {
+		if b, ok2 := v.(bool); ok2 {
+			meta.UseRequestAuth = b
+		}
+	}
 	return &meta
 }

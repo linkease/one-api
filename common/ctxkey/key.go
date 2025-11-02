@@ -21,4 +21,7 @@ const (
 	AvailableModels   = "available_models"
 	KeyRequestBody    = "key_request_body"
 	SystemPrompt      = "system_prompt"
+	// UseRequestAuth indicates request should be forwarded to upstream using the original
+	// Authorization header provided by the user instead of the channel's configured key.
+	UseRequestAuth = "use_request_auth"
 )

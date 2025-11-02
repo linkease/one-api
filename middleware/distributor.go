@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
-
 	"github.com/songquanpeng/one-api/common/ctxkey"
 	"github.com/songquanpeng/one-api/common/logger"
 	"github.com/songquanpeng/one-api/model"
@@ -56,6 +56,17 @@ func Distribute() func(c *gin.Context) {
 			}
 		}
 		logger.Debugf(ctx, "user id %d, user group: %s, request model: %s, using channel #%d", userId, userGroup, requestModel, channel.Id)
+
+		// Special RAG behavior: when the request comes to /rag/v1 and model is lightrag-qwen
+		// the original user's Authorization header instead of the channel's configured key.
+		// Signal this intent via ctxkey.UseRequestAuth so SetupContextForSelectedChannel can
+		// preserve the incoming Authorization header.
+		if strings.HasPrefix(c.Request.URL.Path, "/rag/v1") &&
+			requestModel == "lightrag-qwen" {
+			c.Set(ctxkey.UseRequestAuth, true)
+			logger.Infof(ctx, "use request auth for upstream: path=%s user=%d model=%s", c.Request.URL.Path, userId, requestModel)
+		}
+
 		SetupContextForSelectedChannel(c, channel, requestModel)
 		c.Next()
 	}
@@ -70,7 +81,18 @@ func SetupContextForSelectedChannel(c *gin.Context, channel *model.Channel, mode
 	}
 	c.Set(ctxkey.ModelMapping, channel.GetModelMapping())
 	c.Set(ctxkey.OriginalModel, modelName) // for retry
-	c.Request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", channel.Key))
+	// If UseRequestAuth is set in context, preserve the incoming Authorization header
+	// (so the upstream will be called with the user's provided key). Otherwise set
+	// Authorization to the channel's configured key.
+	if useReqAuth, ok := c.Get(ctxkey.UseRequestAuth); ok {
+		if b, ok2 := useReqAuth.(bool); ok2 && b {
+			logger.Infof(c.Request.Context(), "preserve incoming Authorization for upstream, channel=%d model=%s Auth=%s", channel.Id, modelName, c.Request.Header.Get("Authorization"))
+		} else {
+			c.Request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", channel.Key))
+		}
+	} else {
+		c.Request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", channel.Key))
+	}
 	c.Set(ctxkey.BaseURL, channel.GetBaseURL())
 	cfg, _ := channel.LoadConfig()
 	// this is for backward compatibility
