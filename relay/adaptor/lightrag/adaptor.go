@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/songquanpeng/one-api/relay/meta"
 	"github.com/songquanpeng/one-api/relay/relaymode"
@@ -15,13 +16,18 @@ import (
 )
 
 type Adaptor struct {
-	apiKey  string
-	baseUrl string
-	uri     *url.URL
+	forwardKey  string
+	lightRAGKey string
+	baseUrl     string
+	uri         *url.URL
 }
 
 func (a *Adaptor) Init(meta *meta.Meta) {
-	a.apiKey = meta.APIKey
+	ss := strings.SplitN(meta.APIKey, " ", 2)
+	a.forwardKey = ss[0]
+	if len(ss) > 1 {
+		a.lightRAGKey = ss[1]
+	}
 	a.baseUrl = meta.BaseURL
 	a.uri, _ = url.Parse(meta.BaseURL)
 }
@@ -34,7 +40,12 @@ func (a *Adaptor) GetRequestURL(meta *meta.Meta) (string, error) {
 
 func (a *Adaptor) SetupRequestHeader(c *gin.Context, req *http.Request, meta *meta.Meta) error {
 	adaptor.SetupCommonRequestHeader(c, req, meta)
-	req.Header.Set("X-Openai-Key", a.apiKey)
+	req.Header.Set("X-Openai-Key", a.forwardKey)
+	// Use proxy to see the request
+	//testKey := os.Getenv("LIGHTRAG_TEST_KEY")
+	//req.Header.Set("X-Openai-Key", testKey)
+	//req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", a.lightRAGKey))
+	req.Header.Set("X-API-Key", a.lightRAGKey)
 	return nil
 }
 

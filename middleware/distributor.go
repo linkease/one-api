@@ -86,6 +86,8 @@ func SetupContextForSelectedChannel(c *gin.Context, channel *model.Channel, mode
 	// Authorization to the channel's configured key.
 	if useReqAuth, ok := c.Get(ctxkey.UseRequestAuth); ok {
 		if b, ok2 := useReqAuth.(bool); ok2 && b {
+			forwardKey := strings.TrimPrefix(c.Request.Header.Get("Authorization"), "Bearer ")
+			c.Request.Header.Set("Authorization", fmt.Sprintf("Bearer %s %s", forwardKey, channel.Key))
 			logger.Infof(c.Request.Context(), "preserve incoming Authorization for upstream, channel=%d model=%s Auth=%s", channel.Id, modelName, c.Request.Header.Get("Authorization"))
 		} else {
 			c.Request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", channel.Key))
