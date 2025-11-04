@@ -135,7 +135,7 @@ func insertKoolcenterUser(ctx context.Context, userinfo *Userinfo) (*model.User,
 		user.Role = model.RoleCommonUser
 		user.Status = model.UserStatusEnabled
 		// 默认额度
-		// user.Quota = 10000
+		user.Quota = 100
 		err = user.Insert(ctx, 0)
 	}
 	if err != nil {
